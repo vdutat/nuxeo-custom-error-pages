@@ -1,6 +1,6 @@
 # nuxeo-custom-error-pages
 
-This module overrides the standard Nuxeo DM error page, `stack trace` & `Context dump` are hidden.
+This module overrides the standard Nuxeo DM error page, just add `(OVERRIDDEN)` to the title of the error page.
 
 ## Building
 

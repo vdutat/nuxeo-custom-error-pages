@@ -8,17 +8,17 @@
 <%
   String context = request.getContextPath();
   String user_message = (String) request.getAttribute("user_message");
+  user_message = user_message != null ? user_message : "";
   String exception_message = (String) request.getAttribute("exception_message");
   String stackTrace = (String) request.getAttribute("stackTrace");
   String request_dump = (String) request.getAttribute("request_dump");
+  Boolean isDevModeSet = (Boolean) request.getAttribute("isDevModeSet");
   java.util.ResourceBundle bundle = (java.util.ResourceBundle) request.getAttribute("messageBundle");
   boolean isAnonymous = AnonymousAuthenticator.isAnonymousRequest(request);
-  boolean showStacktrace = false;
-  boolean showContextDump = false;
 %>
 <html>
 <head>
-  <title><%= bundle.getString("label.errorPage.title") %></title>
+  <title><%= bundle.getString("label.errorPage.title")%> (OVERRIDDEN)</title>
   <style type="text/css">
 <!--
 body { background: url("<%=context%>/img/error_pages/page_background.gif") repeat scroll 0 0 transparent;
@@ -104,38 +104,33 @@ a.block.dump { background-image: url("<%=context%>/img/error_pages/view.png") }
         <a class="block change" href="<%=context%>/logout">
           <span><%= bundle.getString("label.errorPage.changeUsername") %></span>
         </a>
-        <% if (showStacktrace) { %>
-        <a class="block stack" href="#" onclick="javascript:toggleError('stackTrace'); return false;">
-          <span><%= bundle.getString("label.errorPage.showStackTrace") %></span>
-        </a>
-        <% } %>
-        <% if (showContextDump) { %>
-        <a class="block dump"href="#" onclick="javascript:toggleError('requestDump'); return false;">
-          <span><%= bundle.getString("label.errorPage.viewContextDump") %></span>
-        </a>
-        <% } %>
 
-        <% if (showStacktrace) { %>
-        <div class="errorDetail" id="stackTrace" style="display: none;">
-          <h2><c:out value="${exception_message}" /></h2>
-          <inputTextarea rows="20" cols="100" readonly="true">
-            <pre>
-              <c:out value="${stackTrace}" />
-            </pre>
-          </inputTextarea>
-        </div>
-        <% } %>
+        <% if (isDevModeSet) { %>
+          <a class="block stack" href="#" onclick="javascript:toggleError('stackTrace'); return false;">
+            <span><%= bundle.getString("label.errorPage.showStackTrace") %></span>
+          </a>
+          <a class="block dump"href="#" onclick="javascript:toggleError('requestDump'); return false;">
+            <span><%= bundle.getString("label.errorPage.viewContextDump") %></span>
+          </a>
 
-        <% if (showContextDump) { %>
-        <div class="errorDetail" id="requestDump" style="display: none;">
-          <h2><%= bundle.getString("label.errorPage.context") %></h2>
-          <inputTextarea rows="20" cols="100" readonly="true">
-            <pre>
-              <c:out value="${request_dump}" />
-            </pre>
-          </inputTextarea>
-        </div>
-        <% } %>
+          <div class="errorDetail" id="stackTrace" style="display: none;">
+            <h2><c:out value="${exception_message}" /></h2>
+            <inputTextarea rows="20" cols="100" readonly="true">
+              <pre>
+                <c:out value="${stackTrace}" />
+              </pre>
+            </inputTextarea>
+          </div>
+
+          <div class="errorDetail" id="requestDump" style="display: none;">
+            <h2><%= bundle.getString("label.errorPage.context") %></h2>
+            <inputTextarea rows="20" cols="100" readonly="true">
+              <pre>
+                <c:out value="${request_dump}" />
+              </pre>
+            </inputTextarea>
+          </div>
+        <%} %>
 
       </div>
 
